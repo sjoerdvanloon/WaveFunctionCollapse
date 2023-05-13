@@ -1,4 +1,4 @@
-﻿namespace WaveFunctionCollapse.Possibilities;
+﻿namespace WaveFunctionCollapse.Possibilities.Letters;
 
 public class PossibilityA  : PossibilityBase, IPossibility
 {

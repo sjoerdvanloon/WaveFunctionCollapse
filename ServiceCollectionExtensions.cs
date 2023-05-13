@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WaveFunctionCollapse.Algorithm;
 using WaveFunctionCollapse.Possibilities;
+using WaveFunctionCollapse.Possibilities.Letters;
 using WaveFunctionCollapse.Renderers;
 using WaveFunctionCollapse.Tests;
 using Xunit.Abstractions;
