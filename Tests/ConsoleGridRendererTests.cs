@@ -7,7 +7,7 @@ namespace WaveFunctionCollapse.Tests;
 public class ConsoleGridRendererTests
 {
     private readonly ServiceProvider _serviceProvider;
-    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<IGridRenderer>();
+    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ConsoleGridRenderer>();
 
     public ConsoleGridRendererTests(ITestOutputHelper outputHelper)
     {

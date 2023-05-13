@@ -10,7 +10,7 @@ public class GridAutoFillerTests
 {
     private readonly ServiceProvider _serviceProvider;
     private  GridAutoFiller _sut => _serviceProvider.GetRequiredService<GridAutoFiller>();
-    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<IGridRenderer>();
+    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ConsoleGridRenderer>();
 
     public GridAutoFillerTests(ITestOutputHelper outputHelper)
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WaveFunctionCollapse.Algorithm;
 using WaveFunctionCollapse.Possibilities;
+using WaveFunctionCollapse.Possibilities.Letters;
 using WaveFunctionCollapse.Renderers;
 using WaveFunctionCollapse.Tests;
 using Xunit.Abstractions;
@@ -13,7 +14,8 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddSingleton(outputHelper)
-            .AddSingleton<IGridRenderer>(x => new ConsoleGridRenderer(outputHelper.WriteLine))
+            .AddSingleton<ConsoleGridRenderer>(x => new ConsoleGridRenderer(outputHelper.WriteLine))
+            .AddSingleton<ImageGridRenderer>(x => new ImageGridRenderer($@"C:\temp\{DateTime.Now.ToString("yy-MM-ddhhmm")}.png"))
             .AddSingleton<ICellSelector, RandomizedCellSelector>()
             .AddSingleton<ILowestEntropyCellFinder, LowestEntropyCellFinder>()
             .AddSingleton<GridAutoFiller>()

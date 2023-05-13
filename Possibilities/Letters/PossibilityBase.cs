@@ -1,8 +1,10 @@
-﻿namespace WaveFunctionCollapse.Possibilities;
+﻿namespace WaveFunctionCollapse.Possibilities.Letters;
 
 public abstract class PossibilityBase
 {
     protected abstract string[] GetExceptedNames();
+    public abstract CellContents.Letters Letter { get; }
+
     
     public bool IsPossible(ICellContext cellContext)
     {

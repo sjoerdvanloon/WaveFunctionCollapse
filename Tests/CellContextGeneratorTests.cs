@@ -10,7 +10,7 @@ namespace WaveFunctionCollapse.Tests;
 public class CellContextGeneratorTests
 {
     private readonly ServiceProvider _serviceProvider;
-    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<IGridRenderer>();
+    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ConsoleGridRenderer>();
     private  CellContextGenerator _sut => _serviceProvider.GetRequiredService<CellContextGenerator>();
 
 
