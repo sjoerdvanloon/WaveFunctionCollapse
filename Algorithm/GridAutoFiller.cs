@@ -15,7 +15,7 @@ public class GridAutoFiller
         ILowestEntropyCellFinder lowestEntropyCellFinder,
         ICellSelector cellSelector,
         IEnumerable<IPossibility> possibilities,
-        CellContextGenerator cellContextGenerator, 
+        CellContextGenerator cellContextGenerator,
         IPossibilitySelector possibilitySelector)
     {
         _lowestEntropyCellFinder = lowestEntropyCellFinder;
@@ -30,12 +30,24 @@ public class GridAutoFiller
     {
         var cellsWithContext = _cellContextGenerator.FromGrid(grid);
 
-        var cellsWithEntropy = cellsWithContext.Select(c =>
+        // while there are still steps to do
+        for (int i = 0; i < steps; i++)
         {
-            var entropy = c.LastPossibilities?.Length ?? int.MaxValue;
-            return new EntropisedCell(c.Cell, entropy);
-        }).ToArray();
+            if (!Iteration(cellsWithContext))
+            {
+                break; // no more iterations possible
+            };
+        }
+    }
 
+    private bool Iteration(CellContext[] cellsWithContext)
+    {
+        var cellsWithEntropy = GenerateCellsWithEntropy(cellsWithContext);
+        
+        if (cellsWithEntropy.Length == 0)
+        {
+            return false;
+        }
 
         // Find cells with lowest entropy
         Cell[] possibleCells = _lowestEntropyCellFinder.FindLowestEntropyCells(cellsWithEntropy);
@@ -50,12 +62,50 @@ public class GridAutoFiller
         // Get number of possibilities for the cell
         var cellContext = cellsWithContext.Single(x => x.Cell == bestCell);
         var possibilities = _possibilities.Where(x => x.IsPossible(cellContext)).ToArray();
+        cellContext.LastPossibilities = possibilities;
 
         // Get random possibility
+        if (possibilities.Length == 0)
+        {
+            bestCell.UpdateCellContent(new TextOnlyCellContent("X"));
+            return false;
+        }
+        
         var possibility = _possibilitySelector.SelectOne(possibilities);
-        
-        var value = possibility.Name;
-        
-        bestCell.UpdateCellContent(new TextOnlyCellContent(value));
+        cellContext.PickPossibility(possibility);
+        bestCell.UpdateCellContent(new TextOnlyCellContent(possibility.Name));
+
+        // Update entropy of neighbours
+        foreach (var neighbourContext in cellContext.GetNeighbourContexts())
+        {
+            if (neighbourContext.HasPickedPossibility())
+                continue;
+            
+            var neighbourPossibilities = _possibilities.Where(x => x.IsPossible(neighbourContext)).ToArray();
+            neighbourContext.LastPossibilities = neighbourPossibilities;
+
+            var possibiltyNames = neighbourPossibilities.Select(x => x.Name).ToArray();
+            var neightbourCellContentValue = "N/A";
+
+            if (possibiltyNames.Any())
+                neightbourCellContentValue = string.Join(",", possibiltyNames)
+            ;
+            
+            neighbourContext.Cell.UpdateCellContent(new TextOnlyCellContent(neightbourCellContentValue));
+        }
+
+        return true;
+    }
+
+    private static EntropisedCell[] GenerateCellsWithEntropy(CellContext[] cellsWithContext)
+    {
+        var cellsWithEntropy = cellsWithContext
+            .Where(x => !x.HasPickedPossibility())
+            .Select(c =>
+            {
+                var entropy = c.LastPossibilities?.Length ?? int.MaxValue;
+                return new EntropisedCell(c.Cell, entropy);
+            }).ToArray();
+        return cellsWithEntropy;
     }
 }

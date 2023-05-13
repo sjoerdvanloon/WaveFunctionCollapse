@@ -1,6 +1,6 @@
 ﻿namespace WaveFunctionCollapse.Possibilities;
 
-public class PossibilityC :IPossibility
+public class PossibilityC : PossibilityBase, IPossibility
 {
     public string Name { get; } = "C";
     public string Description { get; } = "C can be followed by B or C";
@@ -14,19 +14,8 @@ public class PossibilityC :IPossibility
         return Name;
     }
 
-    public bool IsPossible(ICellContext cellContext)
+    protected override string[] GetExceptedNames()
     {
-        var neighbourContexts = cellContext.GetNeighbourContexts();
-        
-        var allPossibilities =
-            neighbourContexts
-                .SelectMany(x=> x.LastPossibilities ?? Array.Empty<IPossibility>()).ToArray();
-        
-        if(!allPossibilities.Any())
-        {
-            return true; // No possibilities, so anything is possible
-        }
-        
-        return allPossibilities.All(x =>  x.Name == "B" || x.Name == "C");
+        return new []{"B", Name};
     }
 }

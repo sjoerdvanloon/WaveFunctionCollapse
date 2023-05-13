@@ -31,10 +31,10 @@ public class GridAutoFillerTests
     [InlineData(5)]
     [InlineData(10)]
     [InlineData(20)]
-    [InlineData(30)]
+    [InlineData(400)]
     public void FillGrid_ShouldWorkForTheNumberOfStepsPassed(int steps)
     {
-        var grid = new Grid(4, 4);
+        var grid = new Grid(8, 8);
         
         _sut.FillGrid(grid, steps);
         
