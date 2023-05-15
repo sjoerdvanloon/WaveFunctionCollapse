@@ -1,11 +1,6 @@
 ﻿using WaveFunctionCollapse.Possibilities;
 
-namespace WaveFunctionCollapse.Algorithm;
-
-public interface IPossibilitySelector
-{
-    IPossibility SelectOne(IPossibility[] possibilities);
-}
+namespace WaveFunctionCollapse.Algorithm.PossibilitySelectors;
 
 public class RandomizedPossibilitySelector : IPossibilitySelector
 {

@@ -1,5 +1,7 @@
 ﻿using Polly;
 using Polly.Timeout;
+using WaveFunctionCollapse.Algorithm.InitialPossibilityGenerator;
+using WaveFunctionCollapse.Algorithm.PossibilitySelectors;
 using WaveFunctionCollapse.CellContents;
 using WaveFunctionCollapse.Possibilities;
 
@@ -11,6 +13,7 @@ public class GridAutoFiller
     private readonly ICellSelector _cellSelector;
     private readonly CellContextGenerator _cellContextGenerator;
     private readonly IPossibilitySelector _possibilitySelector;
+    private readonly IInitialPossibilityGenerator _initialPossibilityGenerator;
     private readonly IPossibility[] _possibilities;
 
     public GridAutoFiller(
@@ -18,12 +21,14 @@ public class GridAutoFiller
         ICellSelector cellSelector,
         IEnumerable<IPossibility> possibilities,
         CellContextGenerator cellContextGenerator,
-        IPossibilitySelector possibilitySelector)
+        IPossibilitySelector possibilitySelector,
+        IInitialPossibilityGenerator initialPossibilityGenerator)
     {
         _lowestEntropyCellFinder = lowestEntropyCellFinder;
         _cellSelector = cellSelector;
         _cellContextGenerator = cellContextGenerator;
         _possibilitySelector = possibilitySelector;
+        _initialPossibilityGenerator = initialPossibilityGenerator;
         _possibilities = possibilities.ToArray();
     }
 
@@ -32,6 +37,11 @@ public class GridAutoFiller
     {
         var cellsWithContext = _cellContextGenerator.FromGrid(grid);
 
+        foreach (var cc in cellsWithContext)
+        {
+            cc.LastPossibilities = _initialPossibilityGenerator.GeneratePossibilities(cc.Cell);
+        }
+        
         var timeoutPolicy =  Policy.Timeout(TimeSpan.FromSeconds(10));
         
         timeoutPolicy.Execute(() =>

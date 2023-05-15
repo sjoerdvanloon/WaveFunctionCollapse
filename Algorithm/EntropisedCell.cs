@@ -10,6 +10,11 @@ public class EntropisedCell
         Cell = cell;
         Entropy = entropy;
     }
+    
+    public override string ToString()
+    {
+        return $"{Cell} with entropy {Entropy}";
+    }
 
 
 

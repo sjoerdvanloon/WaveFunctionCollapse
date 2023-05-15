@@ -1,4 +1,6 @@
-﻿namespace WaveFunctionCollapse.Possibilities.Letters;
+﻿using WaveFunctionCollapse.Possibilities;
+
+namespace WaveFunctionCollapse.Implementations.Letters.Possibilities;
 
 public class PossibilityEmpty  : PossibilityBase, IPossibility
 {
@@ -19,5 +21,5 @@ public class PossibilityEmpty  : PossibilityBase, IPossibility
         return new []{"A", Name};
     }
 
-    public override CellContents.Letters Letter => CellContents.Letters.Empty;
+    public override Implementations.Letters.Letters Letter => Implementations.Letters.Letters.Empty;
 }

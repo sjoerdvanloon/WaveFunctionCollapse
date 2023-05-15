@@ -14,7 +14,7 @@ public class CellContext : ICellContext
     public Cell Cell { get; }
     private CellContext[]? _neighbours;
     public IPossibility[]? LastPossibilities { get; set; }
-    private IPossibility? _pickedPossibility { get; set; }
+    public IPossibility? PickedPossibility { get; set; }
 
     public CellContext(Cell cell)
     {
@@ -32,21 +32,26 @@ public class CellContext : ICellContext
     
     public void PickPossibility(IPossibility possibility)
     {
-        if (_pickedPossibility is not null)
+        if (PickedPossibility is not null)
         {
             throw new InvalidOperationException("Possibility is already picked");
         }
         LastPossibilities = new[] {possibility};
-        _pickedPossibility = possibility;
+        PickedPossibility = possibility;
     }
 
     public bool HasPickedPossibility()
     {
-        return _pickedPossibility is not null;
+        return PickedPossibility is not null;
     }
 
     public CellContext[] GetNeighbourContexts()
     {
         return _neighbours ?? Array.Empty<CellContext>();
+    }
+    
+    public override string ToString()
+    {
+        return $"{Cell} with {(PickedPossibility is not null ? "picked possibility" :  LastPossibilities?.Length.ToString())}";
     }
 }

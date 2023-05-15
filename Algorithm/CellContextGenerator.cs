@@ -19,7 +19,12 @@ public class CellContextGenerator
                 var neighbours = new List<CellContext>();
 
                 // Get left neighbour
-                if (y > 0)
+                var hasLeftNeighbour = y > 0;
+                var hasRightNeighbour = y < grid.Width - 1;
+                var hasTopNeighbour = x > 0;
+                var hasBottomNeighbour = x < grid.Height - 1;
+                
+                if (hasLeftNeighbour)
                 {
                     var leftNeighbour = grid.GetCell(x, y-1);
                     var leftNeighbourContext = cellsWithContext.Single(cc => cc.Cell == leftNeighbour);
@@ -27,7 +32,7 @@ public class CellContextGenerator
                 }
 
                 // Get right neighbour
-                if (y < grid.Width - 1)
+                if (hasRightNeighbour)
                 {
                     var rightNeighbour = grid.GetCell(x , y+1);
                     var rightNeighbourContext = cellsWithContext.Single(x => x.Cell == rightNeighbour);
@@ -35,7 +40,7 @@ public class CellContextGenerator
                 }
 
                 // Get top neighbour
-                if (x > 0)
+                if (hasTopNeighbour)
                 {
                     var topNeighbour = grid.GetCell(x-1, y );
                     var topNeighbourContext = cellsWithContext.Single(x => x.Cell == topNeighbour);
@@ -43,7 +48,7 @@ public class CellContextGenerator
                 }
 
                 // Get bottom neighbour
-                if (x < grid.Height - 1)
+                if (hasBottomNeighbour)
                 {
                     var bottomNeighbour = grid.GetCell(x+1, y );
                     var bottomNeighbourContext = cellsWithContext.Single(x => x.Cell == bottomNeighbour);

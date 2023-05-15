@@ -10,7 +10,7 @@ public class ImageGridRendererTests
 {
     private readonly ITestOutputHelper _outputHelper;
     private readonly ServiceProvider _serviceProvider;
-    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ImageGridRenderer>();
+    private  ImageGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ImageGridRenderer>();
  private  GridAutoFiller _autoFiller => _serviceProvider.GetRequiredService<GridAutoFiller>();
 
     public ImageGridRendererTests(ITestOutputHelper outputHelper)
@@ -30,9 +30,8 @@ public class ImageGridRendererTests
         var grid = new Grid(4, 4);
         _autoFiller.FillGrid(grid, 400);
         
-        var imageRenderer = (ImageGridRenderer) _gridRenderer;
         _gridRenderer.DrawGrid(grid);
         
-        _outputHelper.WriteLine(imageRenderer.Path);
+        _outputHelper.WriteLine(_gridRenderer.Path);
     }
 }

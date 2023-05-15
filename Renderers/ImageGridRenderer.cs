@@ -64,7 +64,8 @@ public class ImageGridRenderer : IGridRenderer
         var images = new Image[5];
         for (int i = 0; i < 5; i++)
         {
-            var stream = rootType.Assembly.GetManifestResourceStream(resourceNames[i]);
+            var resourceName = resourceNames[i];
+            var stream = rootType.Assembly.GetManifestResourceStream(resourceName);
             images[i] = Image.FromStream(stream);
         }
         

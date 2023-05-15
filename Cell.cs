@@ -37,7 +37,7 @@ public class Cell
     
     public override string ToString()
     {
-        return $"Cell at ({_xPosition}, {_yPosition}) with content {_lastCellContent}";
+        return $"Cell at ({_xPosition}, {_yPosition}) with content {_lastCellContent.GetFriendlyText()}";
     }
 
 }
