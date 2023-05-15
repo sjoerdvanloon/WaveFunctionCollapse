@@ -77,11 +77,11 @@ public class ImageGridRenderer : IGridRenderer
                 {
                     var cellIndex = y * grid.Width + x;
                     var cell = grid.GetCell(x,y);
-                    var mapping = _mappings.SingleOrDefault(m => m.Name == cell.Text);
-                    // if (mapping is null)
-                    //     throw new Exception($"No mapping found for {cell.Text}");
-                    var image = images[mapping.ResourceIndex];
-                    g.DrawImage(image, x * _size, y * _size);
+                    // var mapping = _mappings.SingleOrDefault(m => m.Name == cell.Text);
+                    // // if (mapping is null)
+                    // //     throw new Exception($"No mapping found for {cell.Text}");
+                    // var image = images[mapping.ResourceIndex];
+                    // g.DrawImage(image, x * _size, y * _size);
                 }
             }
         }

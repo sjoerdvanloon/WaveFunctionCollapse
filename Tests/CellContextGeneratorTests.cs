@@ -10,7 +10,7 @@ namespace WaveFunctionCollapse.Tests;
 public class CellContextGeneratorTests
 {
     private readonly ServiceProvider _serviceProvider;
-    private  IGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ConsoleGridRenderer>();
+    private  ConsoleGridRenderer _gridRenderer => _serviceProvider.GetRequiredService<ConsoleGridRenderer>();
     private  CellContextGenerator _sut => _serviceProvider.GetRequiredService<CellContextGenerator>();
 
 
@@ -23,6 +23,8 @@ public class CellContextGeneratorTests
     [Theory]
     [InlineData(1, 1)]
     [InlineData(1, 4)]
+    [InlineData(2, 4)]
+    [InlineData(4, 1)]
     [InlineData(2, 2)]
     [InlineData(4, 4)]
     [InlineData(16, 16)]
@@ -34,7 +36,6 @@ public class CellContextGeneratorTests
         // Act
        var contexts =  _sut.FromGrid(grid);
         
-
         // Assert
         // Set text content for each cell with the number of neighbors and lastPossibility count
         foreach (var context in contexts)

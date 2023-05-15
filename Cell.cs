@@ -7,11 +7,12 @@ public class Cell
     private readonly int _xPosition;
     private readonly int _yPosition;
 
-    private ICellContent? _lastCellContent = null;
+    private ICellContent _lastCellContent ;
 
     public int XPosition => _xPosition;
     public int YPosition => _yPosition;
-    public string Text { get; private set; } = string.Empty;
+    
+    public ICellContent CellContent => _lastCellContent ?? throw new InvalidOperationException("CellContent is null");
 
     public Cell(int xPosition, int yPosition)
     {
@@ -20,25 +21,23 @@ public class Cell
 
         UpdateCellContent(new PositionCellContent(this));
     }
-
-    private void UpdateText()
+    
+    public static Cell Create(int xPosition, int yPosition)
     {
-        if (_lastCellContent is null)
-        {
-            Text = $"({_xPosition},{_yPosition})";
-        }
-        else
-        {
-            Text = _lastCellContent.Text;
-        }
+        return new Cell(xPosition, yPosition);
     }
-
+    
     public void UpdateCellContent(ICellContent cellContent)
     {
         if (cellContent is null) throw new ArgumentNullException(nameof(cellContent));
 
         _lastCellContent = cellContent;
-
-        UpdateText();
+     
     }
+    
+    public override string ToString()
+    {
+        return $"Cell at ({_xPosition}, {_yPosition}) with content {_lastCellContent}";
+    }
+
 }

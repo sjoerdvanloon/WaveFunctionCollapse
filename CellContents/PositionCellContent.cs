@@ -10,5 +10,5 @@ public class PositionCellContent : ICellContent
         this._xPosition = cell.XPosition;
         this._yPosition = cell.YPosition;
     }
-    public string Text  => $"({_xPosition},{_yPosition})";
+    public string GetFriendlyText() => $"({_xPosition},{_yPosition})";
 }

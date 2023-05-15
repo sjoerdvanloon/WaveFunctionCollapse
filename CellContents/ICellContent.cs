@@ -2,5 +2,5 @@
 
 public interface ICellContent
 {
-    string Text { get; }
+    public string GetFriendlyText();
 }

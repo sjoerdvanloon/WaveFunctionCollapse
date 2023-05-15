@@ -1,4 +1,6 @@
-﻿using WaveFunctionCollapse.CellContents;
+﻿using Polly;
+using Polly.Timeout;
+using WaveFunctionCollapse.CellContents;
 using WaveFunctionCollapse.Possibilities;
 
 namespace WaveFunctionCollapse.Algorithm;
@@ -30,14 +32,21 @@ public class GridAutoFiller
     {
         var cellsWithContext = _cellContextGenerator.FromGrid(grid);
 
-        // while there are still steps to do
-        for (int i = 0; i < steps; i++)
+        var timeoutPolicy =  Policy.Timeout(TimeSpan.FromSeconds(10));
+        
+        timeoutPolicy.Execute(() =>
         {
-            if (!Iteration(cellsWithContext))
+            // while there are still steps to do
+            for (int i = 0; i < steps; i++)
             {
-                break; // no more iterations possible
-            };
-        }
+                if (!Iteration(cellsWithContext))
+                {
+                    break; // no more iterations possible
+                }
+
+                ;
+            }
+        });
     }
 
     private bool Iteration(CellContext[] cellsWithContext)

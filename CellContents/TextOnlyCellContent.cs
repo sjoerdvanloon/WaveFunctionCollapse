@@ -8,5 +8,6 @@ public class TextOnlyCellContent : ICellContent
         _text = text;
     }
 
+    public string GetFriendlyText() => _text;
     public string Text => _text;
 }

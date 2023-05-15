@@ -12,5 +12,5 @@ public class EntropyCellContent : ICellContent
         this._yPosition = cell.YPosition;
         _entropy = entropy;
     }
-    public string Text  => $"({_xPosition},{_yPosition},E:{_entropy})";
+    public string GetFriendlyText()  => $"({_xPosition},{_yPosition},E:{_entropy})";
 }

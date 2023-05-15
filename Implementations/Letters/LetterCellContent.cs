@@ -13,8 +13,5 @@ public class LetterCellContent : ICellContent
         Letter = letter;
     }
 
-    public string Text
-    {
-        get => Letter.ToString();
-    }
+    public string GetFriendlyText() => Letter.ToString();
 }
