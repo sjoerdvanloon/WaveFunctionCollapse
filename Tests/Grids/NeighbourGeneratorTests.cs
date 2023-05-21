@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using WaveFunctionCollapse.Grids;
 using WaveFunctionCollapse.Renderers;
 using Xunit.Abstractions;

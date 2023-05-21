@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using WaveFunctionCollapse.Algorithm;
 using WaveFunctionCollapse.Grids;
 using WaveFunctionCollapse.Renderers;
 using Xunit.Abstractions;

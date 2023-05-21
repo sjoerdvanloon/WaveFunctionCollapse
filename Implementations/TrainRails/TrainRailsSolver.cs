@@ -36,7 +36,7 @@ public class TrainRailsSolver : SolverBase
             return RailCellContent.CreateError("No possibilities");
 
         var possibilities = cellContext.LastPossibilities.Cast<PossibilityBase>().ToArray();
-        var TrainRailss = possibilities.Select(x => x.RailType).ToArray();
-        return RailCellContent.CreateUndetermined(TrainRailss);
+        var trainRails = possibilities.Select(x => x.RailType).ToArray();
+        return RailCellContent.CreateUndetermined(trainRails);
     }
 }

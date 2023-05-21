@@ -1,11 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using WaveFunctionCollapse.Algorithm;
+﻿using WaveFunctionCollapse.Algorithm;
 using WaveFunctionCollapse.Algorithm.InitialPossibilityGenerator;
 using WaveFunctionCollapse.Algorithm.PossibilitySelectors;
 using WaveFunctionCollapse.Grids;
-using WaveFunctionCollapse.Implementations.Letters;
-using WaveFunctionCollapse.Implementations.Letters.Possibilities;
-using WaveFunctionCollapse.Possibilities;
 using WaveFunctionCollapse.Renderers;
 using Xunit.Abstractions;
 
@@ -36,14 +32,5 @@ public static class ServiceCollectionExtensions
     }
 
 
-    public static IServiceCollection AddLetterServices(this IServiceCollection services)
-    {
-        services
-            .AddSingleton<IPossibility, PossibilityEmpty>()
-            .AddSingleton<IPossibility, PossibilityA>()
-            .AddSingleton<IPossibility, PossibilityB>()
-            .AddSingleton<IPossibility, PossibilityC>()
-            .AddSingleton<ISolver, LetterSolver>();
-        return services;
-    }
+  
 }

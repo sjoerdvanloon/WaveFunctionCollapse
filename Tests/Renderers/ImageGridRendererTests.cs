@@ -1,6 +1,4 @@
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using WaveFunctionCollapse.Algorithm;
 using WaveFunctionCollapse.Renderers;
 using Xunit.Abstractions;
 
