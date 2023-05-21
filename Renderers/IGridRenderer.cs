@@ -1,4 +1,6 @@
-﻿namespace WaveFunctionCollapse.Renderers;
+﻿using WaveFunctionCollapse.Grids;
+
+namespace WaveFunctionCollapse.Renderers;
 
 public interface IGridRenderer
 {

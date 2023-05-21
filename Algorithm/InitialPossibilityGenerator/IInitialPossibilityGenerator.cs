@@ -1,4 +1,5 @@
-﻿using WaveFunctionCollapse.Possibilities;
+﻿using WaveFunctionCollapse.Grids;
+using WaveFunctionCollapse.Possibilities;
 
 namespace WaveFunctionCollapse.Algorithm.InitialPossibilityGenerator;
 

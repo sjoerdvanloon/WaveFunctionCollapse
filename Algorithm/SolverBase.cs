@@ -2,6 +2,7 @@
 using WaveFunctionCollapse.Algorithm.InitialPossibilityGenerator;
 using WaveFunctionCollapse.Algorithm.PossibilitySelectors;
 using WaveFunctionCollapse.CellContents;
+using WaveFunctionCollapse.Grids;
 using WaveFunctionCollapse.Possibilities;
 
 namespace WaveFunctionCollapse.Algorithm;
@@ -35,7 +36,8 @@ public abstract class SolverBase : ISolver
 
         foreach (var cellContext in cellContextLookup.Values)
         {
-            cellContext.Cell.UpdateCellContent(GenerateUndeterminedCellContent(cellContext.Cell, cellContext));
+            var initialContent = GenerateUndeterminedCellContent(cellContext.Cell, cellContext);
+            cellContext.Cell.SetCellContent(initialContent);
         }
 
         var timeoutPolicy = Policy.Timeout(TimeSpan.FromSeconds(10));
@@ -45,7 +47,8 @@ public abstract class SolverBase : ISolver
             // while there are still steps to do
             for (int i = 0; i < maxIterations; i++)
             {
-                if (!Iterate(cells, cellContextLookup))
+                var state = Iterate( cellContextLookup);
+                if ( state is IterationState.Fail or IterationState.Done)
                     break; // no more iterations possible
             }
         });
@@ -53,79 +56,79 @@ public abstract class SolverBase : ISolver
         return true;
     }
 
-    private Cell[] FindCellsWithLowestEntropy(IEnumerable<CellContext> cells)
+    public enum IterationState
     {
-        var cellContexts = cells as CellContext[] ?? cells.ToArray();
-        if (!cellContexts.Any())
-            return new Cell[] { };
-        int lowestEntropy = cellContexts.Min(x => x.LastPossibilities?.Length ?? int.MaxValue);
-        return cellContexts.Where(x => (x.LastPossibilities?.Length ?? int.MaxValue) == lowestEntropy)
-            .Select(x => x.Cell)
-            .ToArray();
+        Continue,
+        Done,
+        Fail
     }
+
+   
 
     protected abstract ICellContent GenerateErrorCellContent(Cell cell, CellContext cellContext);
     protected abstract ICellContent GeneratePickedValueCellContent(Cell cell, CellContext cellContext);
     protected abstract ICellContent GenerateUndeterminedCellContent(Cell cell, CellContext cellContext);
 
-    private bool Iterate(IEnumerable<Cell> cells, Dictionary<Cell, CellContext> cellContextLookup)
+    private IterationState Iterate(Dictionary<Cell, CellContext> cellContextLookup)
     {
-        var cellsWithEntropy = GenerateCellsWithEntropy(cellContextLookup.Values.ToArray());
-
-        if (!cellsWithEntropy.Any())
-            return false;
-
         // Find cells with lowest entropy
         Cell[] possibleCells = FindCellsWithLowestEntropy(cellContextLookup.Values);
+
+        if (!possibleCells.Any())
+            return  IterationState.Done;
 
         // Select cell with lowest entropy
         Cell bestCell = _cellSelector.SelectCell(possibleCells);
 
-        // Get entropy of cell
-        var lowestEntropy = cellsWithEntropy.Single(x => x.Cell == bestCell).Entropy;
-        var entropyValue = lowestEntropy.ToString();
-
         // Get number of possibilities for the cell
         var cellContext = cellContextLookup[bestCell];
-        var possibilities = _possibilities.Where(x => x.IsPossible(cellContext)).ToArray();
+        var possibilities = _possibilities.Where(x => x.IsPossible(cellContext, cellContextLookup)).ToArray();
         cellContext.LastPossibilities = possibilities;
 
         // Get random possibility
         if (possibilities.Length == 0)
         {
-            bestCell.UpdateCellContent(GenerateErrorCellContent(bestCell, cellContext));
-            return false;
+            bestCell.SetCellContent(GenerateErrorCellContent(bestCell, cellContext));
+            return  IterationState.Fail;
         }
 
         var possibility = _possibilitySelector.SelectOne(possibilities);
         cellContext.PickPossibility(possibility);
-        bestCell.UpdateCellContent(GeneratePickedValueCellContent(bestCell, cellContext));
+        bestCell.SetCellContent(GeneratePickedValueCellContent(bestCell, cellContext));
 
         // Update entropy of neighbours
-        foreach (var neighbourContext in cellContext.GetNeighbourContexts())
+        var neighbours = cellContext.Cell.Neighbours;
+        // TODO: this could be algorithm specific
+        var neighbourContexts = neighbours.GetDirectNeighbours().Select(x => cellContextLookup[x.Cell]).ToArray(); // All neighbours could be possible
+        foreach (var neighbourContext in neighbourContexts)
         {
             if (neighbourContext.HasPickedPossibility())
                 continue;
 
-            var neighbourPossibilities = _possibilities.Where(x => x.IsPossible(neighbourContext)).ToArray();
+            var neighbourPossibilities = _possibilities.Where(x => x.IsPossible(neighbourContext, cellContextLookup)).ToArray();
             neighbourContext.LastPossibilities = neighbourPossibilities;
 
-            neighbourContext.Cell.UpdateCellContent(GenerateUndeterminedCellContent(neighbourContext.Cell,
+            neighbourContext.Cell.SetCellContent(GenerateUndeterminedCellContent(neighbourContext.Cell,
                 neighbourContext));
         }
 
-        return true;
+        return IterationState.Continue;
     }
-
-    private static EntropisedCell[] GenerateCellsWithEntropy(IEnumerable<CellContext> cellsWithContext)
+    
+    private Cell[] FindCellsWithLowestEntropy(IEnumerable<CellContext> cellContexts)
     {
-        var cellsWithEntropy = cellsWithContext
-            .Where(x => !x.HasPickedPossibility())
-            .Select(c =>
-            {
-                var entropy = c.LastPossibilities?.Length ?? int.MaxValue;
-                return new EntropisedCell(c.Cell, entropy);
-            }).ToArray();
-        return cellsWithEntropy;
+        var onlyUnfinishedCells = cellContexts
+            .Where(x => !x.HasPickedPossibility()).ToArray();
+        
+        if (!onlyUnfinishedCells.Any())
+            return new Cell[] { }; // No cells, return empty array
+        
+        // Get lowest number
+        int lowestEntropy = onlyUnfinishedCells.Min(x => x.LastPossibilities?.Length ?? int.MaxValue);
+        
+        // Get all cells with the lowest umber
+        return onlyUnfinishedCells.Where(x =>  (x.LastPossibilities?.Length ?? int.MaxValue) == lowestEntropy)
+            .Select(x => x.Cell)
+            .ToArray();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ConsoleTables;
+using WaveFunctionCollapse.Grids;
 
 namespace WaveFunctionCollapse.Renderers;
 
@@ -15,17 +16,15 @@ public class ConsoleCellRenderer : ICellRenderer
     {
         var value = cell.CellContent.GetFriendlyText();
         
-        var xPositionInTable = cell.XPosition;
-        if (_table.Rows.Count <= xPositionInTable)
+        if (cell.Row > _table.Rows.Count )
             throw new Exception(
-                $"X position {xPositionInTable} is out of range of the table with {_table.Rows.Count} rows.");
-        var row = _table.Rows[xPositionInTable];
+                $"Row {cell.Row} is out of range of the table with {_table.Rows.Count} rows.");
+        var row = _table.Rows[cell.Row-1];
 
-        var yPositionInTable = cell.YPosition + 1;
-        if (row.Length <= yPositionInTable)
+        if (cell.Column > row.Length   )
             throw new Exception(
-                $"Y position {yPositionInTable} is out of range of the table with {row.Length} column in row {xPositionInTable}.");
-        row[yPositionInTable] = cell.CellContent.GetFriendlyText();
+                $"Column {cell.Column} is out of range of the table with {row.Length} column in row {cell.Row}.");
+        row[cell.Column] = value;
 
     }
 }

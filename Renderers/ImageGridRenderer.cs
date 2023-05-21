@@ -1,11 +1,10 @@
-﻿using System.Drawing;
-using System.Resources;
-using System.Text;
-using ConsoleTables;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Resources;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using WaveFunctionCollapse.Grids;
 
 namespace WaveFunctionCollapse.Renderers;
 
+[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
 public class ImageGridRenderer : IGridRenderer
 {
     private readonly string _path;
@@ -65,7 +64,7 @@ public class ImageGridRenderer : IGridRenderer
         for (int i = 0; i < 5; i++)
         {
             var resourceName = resourceNames[i];
-            var stream = rootType.Assembly.GetManifestResourceStream(resourceName);
+            var stream = rootType.Assembly.GetManifestResourceStream(resourceName)!;
             images[i] = Image.FromStream(stream);
         }
         
@@ -77,7 +76,7 @@ public class ImageGridRenderer : IGridRenderer
                 for (int x = 0; x < grid.Width; x++)
                 {
                     var cellIndex = y * grid.Width + x;
-                    var cell = grid.GetCell(x,y);
+                    var cell = grid.GetCellBasedOnCoordinates(x,y);
                     // var mapping = _mappings.SingleOrDefault(m => m.Name == cell.Text);
                     // // if (mapping is null)
                     // //     throw new Exception($"No mapping found for {cell.Text}");

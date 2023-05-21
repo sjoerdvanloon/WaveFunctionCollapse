@@ -2,6 +2,7 @@
 using WaveFunctionCollapse.Algorithm;
 using WaveFunctionCollapse.Algorithm.InitialPossibilityGenerator;
 using WaveFunctionCollapse.Algorithm.PossibilitySelectors;
+using WaveFunctionCollapse.Grids;
 using WaveFunctionCollapse.Implementations.Letters;
 using WaveFunctionCollapse.Implementations.Letters.Possibilities;
 using WaveFunctionCollapse.Possibilities;
@@ -12,27 +13,28 @@ namespace WaveFunctionCollapse;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddServices(this IServiceCollection services, ITestOutputHelper outputHelper)
+    public static IServiceCollection AddWaveFunctionCollapseServices(this IServiceCollection services)
     {
         services
-            .AddSingleton(outputHelper)
-            .AddSingleton<ConsoleGridRenderer>(x => 
-                new ConsoleGridRenderer(outputHelper.WriteLine))
-            .AddSingleton<ImageGridRenderer>(x => 
+            .AddSingleton<ConsoleGridRenderer>(x =>
+            {
+                var outputHelper = x.GetRequiredService<ITestOutputHelper>();
+                return new ConsoleGridRenderer(outputHelper.WriteLine);
+            })
+            .AddSingleton<ImageGridRenderer>(x =>
                 new ImageGridRenderer($@"C:\temp\{DateTime.Now.ToString("yy-MM-ddhhmm")}.png"))
             .AddSingleton<ICellSelector, RandomizedCellSelector>()
             .AddSingleton<ILowestEntropyCellFinder, LowestEntropyCellFinder>()
-            .AddSingleton<GridAutoFiller>()
             .AddSingleton<Random>(sp => new Random(10))
             .AddSingleton<IPossibilitySelector, RandomizedPossibilitySelector>()
-            .AddSingleton<IInitialPossibilityGenerator, InitialPossibilityGenerator>()
-            .AddSingleton<CellContextGenerator>()
+            .AddSingleton<IInitialPossibilityGenerator, InitiallyEverythingIsPossibleGenerator>()
+            .AddSingleton<GridFactory>()
+            .AddSingleton<NeighbourGenerator>()
             ;
 
         return services;
     }
-    
-  
+
 
     public static IServiceCollection AddLetterServices(this IServiceCollection services)
     {

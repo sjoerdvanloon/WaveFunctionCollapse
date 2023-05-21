@@ -1,4 +1,6 @@
-﻿namespace WaveFunctionCollapse.CellContents;
+﻿using WaveFunctionCollapse.Grids;
+
+namespace WaveFunctionCollapse.CellContents;
 
 public class PositionCellContent : ICellContent
 {   

@@ -1,12 +1,12 @@
 ﻿using WaveFunctionCollapse.Grids;
 using WaveFunctionCollapse.Possibilities;
 
-namespace WaveFunctionCollapse.Implementations.Letters.Possibilities;
+namespace WaveFunctionCollapse.Implementations.TrainRails.Possibilities;
 
 public abstract class PossibilityBase
 {
     protected abstract string[] GetExceptedNames();
-    public abstract Implementations.Letters.Letters Letter { get; }
+    public abstract Implementations.TrainRails.RailTypes RailType { get; }
 
 
     public bool IsPossible(ICellContext cellContext, Dictionary<Cell, CellContext> cellContexts)

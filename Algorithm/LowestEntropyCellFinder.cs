@@ -1,4 +1,6 @@
-﻿namespace WaveFunctionCollapse.Algorithm;
+﻿using WaveFunctionCollapse.Grids;
+
+namespace WaveFunctionCollapse.Algorithm;
 
 public interface ILowestEntropyCellFinder
 {

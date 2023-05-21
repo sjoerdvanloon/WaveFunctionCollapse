@@ -1,5 +1,5 @@
-﻿using System.Text;
-using ConsoleTables;
+﻿using ConsoleTables;
+using WaveFunctionCollapse.Grids;
 
 namespace WaveFunctionCollapse.Renderers;
 
@@ -21,20 +21,19 @@ public class ConsoleGridRenderer : IGridRenderer
         var headers =
             Enumerable.Range(0, grid.Width).Select(x => x.ToString()).ToArray();
 
-        // Create table
-        var table = new ConsoleTable(new string[1] { " " }.Concat(headers).ToArray());
+        // CreateBasedOnCoordinates table
+        var table = new ConsoleTable(new string[1] { " Y/X " }.Concat(headers).ToArray());
 
         var cellRenderer = new ConsoleCellRenderer(table);
 
-        for (int x = 0; x < grid.Height; x++)
+        for (int y = 0; y < grid.Height; y++)
         {
-            object[] rowValues = new string[grid.Width + 1];
-            rowValues[0] = x.ToString();
+            var rowValues = new object[grid.Width + 1];
+            rowValues[0] = y.ToString();
             table.AddRow(rowValues);
-
-            for (int y = 0; y < grid.Width; y++)
+            for (int x = 0; x < grid.Width; x++)
             {
-                var cellIndex = y + x * grid.Width;
+                var cellIndex = y * grid.Width + x;
                 var cell = cells[cellIndex];
                 cellRenderer.Render(cell);
             }

@@ -1,4 +1,4 @@
-﻿using WaveFunctionCollapse.CellContents;
+﻿using WaveFunctionCollapse.Grids;
 
 namespace WaveFunctionCollapse.Renderers;
 
