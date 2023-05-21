@@ -13,7 +13,19 @@ public class RandomizedPossibilitySelector : IPossibilitySelector
 
     public IPossibility SelectOne(IPossibility[] possibilities)
     {
-        var index = _random.Next(0, possibilities.Length);
-        return possibilities[index];
+        var weightedBag = new WeightedRandomBag<IPossibility>(_random);
+        foreach (var possibility in possibilities)
+        {
+            if (possibility is IWeighted weighted)
+            {
+                weightedBag.AddEntry(possibility, weighted.Weight);
+            }
+            else
+            {
+                weightedBag.AddEntry(possibility, 1);
+            }
+        }
+
+        return   weightedBag.GetRandom();
     }
 }

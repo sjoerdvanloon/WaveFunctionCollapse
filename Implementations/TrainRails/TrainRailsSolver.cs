@@ -1,5 +1,4 @@
 ﻿using WaveFunctionCollapse.Algorithm;
-using WaveFunctionCollapse.Algorithm.InitialPossibilityGenerator;
 using WaveFunctionCollapse.Algorithm.PossibilitySelectors;
 using WaveFunctionCollapse.CellContents;
 using WaveFunctionCollapse.Grids;
@@ -15,9 +14,14 @@ public class TrainRailsSolver : SolverBase
         IPossibilitySelector possibilitySelector,
         ICellSelector cellSelector) : base(possibilitySelector, cellSelector)
     {
+        var allRailTypes = Enum.GetValues<RailTypes>();
+        // Currently only have art for junctions and empty
+       // var onlyJunctions = allRailTypes.Where(x => x.ToString().Contains("Junction") || x.ToString().Contains("Empty")).ToArray();
+        
+        var applicableRailTypes = allRailTypes.ToArray();
         // Get all enum values in a list
         var railTypePossibilities = 
-            Enum.GetValues<RailTypes>()
+            applicableRailTypes
                 .Select(x=>new RailPossibility(x)).Cast<IPossibility>().ToArray();
 
         _railTypePossibilities = railTypePossibilities;

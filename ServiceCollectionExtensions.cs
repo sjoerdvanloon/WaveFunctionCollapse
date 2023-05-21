@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
                 return new ConsoleGridRenderer(outputHelper.WriteLine);
             })
             .AddSingleton<ImageGridRenderer>(x =>
-                new ImageGridRenderer($@"C:\temp\{DateTime.Now.ToString("yy-MM-ddhhmm")}.png"))
+                new ImageGridRenderer($@"C:\temp\{DateTime.Now.ToString("yy-MM-ddhhmm-sss")}.png"))
             .AddSingleton<ICellSelector, RandomizedCellSelector>()
             .AddSingleton<ILowestEntropyCellFinder, LowestEntropyCellFinder>()
             .AddSingleton<Random>(sp => new Random(10))

@@ -21,16 +21,16 @@ public class TrainRailsSolverTests : UnitTestBase<ConsoleGridRenderer>
     }
 
     [Theory]
-    [InlineData(1)]
+    [InlineData(1, 8,8)]
     [InlineData(2)]
     [InlineData(3)]
     [InlineData(4)]
     [InlineData(10)]
     [InlineData(4000)]
-    public void Solve_ShouldWorkForTheNumberOfStepsPassed(int steps)
+    public void Solve_ShouldWorkForTheNumberOfStepsPassed(int steps , int height = 4, int width = 4)
     {
         // Arrange
-        var grid = CreateGrid(8, 8);
+        var grid = CreateGrid(height, width);
 
         // Act
         _sut.Solve(grid, steps);

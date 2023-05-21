@@ -53,6 +53,12 @@
       <EmbeddedResource Include="Resources\up.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="Resources\cross.png" />
+      <EmbeddedResource Include="Resources\cross.png" />
+      <None Remove="Resources\horizontal.png" />
+      <EmbeddedResource Include="Resources\horizontal.png" />
+      <None Remove="Resources\vertical.png" />
+      <EmbeddedResource Include="Resources\vertical.png" />
     </ItemGroup>
 
     <ItemGroup>

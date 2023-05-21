@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using WaveFunctionCollapse.CellContents;
 using WaveFunctionCollapse.Grids;
 
 namespace WaveFunctionCollapse.Renderers;
@@ -8,85 +10,83 @@ namespace WaveFunctionCollapse.Renderers;
 public class ImageGridRenderer : IGridRenderer
 {
     private readonly string _path;
-    private int _size = 600;
-    
+
     public string Path => _path;
 
     public ImageGridRenderer(string path)
     {
         _path = path;
     }
-
-    private Bitmap MergeImages(IEnumerable<Bitmap> images)
+    
+    public void DrawGrid(Grid grid)
     {
-        var enumerable = images as IList<Bitmap> ?? images.ToList();
+        var imageLookup = GenerateImageLookup();
 
-        var width = 0;
-        var height = 0;
+        var size = GetSizeFromImageList(imageLookup.Values);
 
-        foreach (var image in enumerable)
-        {
-            width += image.Width;
-            height = image.Height > height
-                ? image.Height
-                : height;
-        }
-
+        var width = grid.Width * size.Width;
+        var height = grid.Height * size.Height;
         var bitmap = new Bitmap(width, height);
         using (var g = Graphics.FromImage(bitmap))
         {
-            var localWidth = 0;
-            foreach (var image in enumerable)
+            var outlinePen = new Pen(Color.Red, 5);
+
+            grid.IterateThroughCells(cell =>
             {
-                g.DrawImage(image, localWidth, 0);
-                localWidth += image.Width;
-            }
+                if (cell.CellContent is not IEmbeddedResourceContent embeddedResourceContent)
+                    throw new Exception($"Cell {cell} is not of type {nameof(IEmbeddedResourceContent)}, but is of type {cell.CellContent.GetType().Name}");
+
+                var resourceName = embeddedResourceContent.GetEmbeddedResourceName();
+                var image = imageLookup[resourceName.ToLower()];
+                
+                var x = cell.XPosition * size.Width;
+                var y = cell.YPosition * size.Height;
+                var imageWidth = image.Width;
+                var imageHeight = image.Height;
+                
+                g.DrawImage(image, x, y, imageWidth, imageHeight);
+                
+                //g.DrawRectangle(outlinePen, x,y, imageWidth, imageHeight);
+                // var pen2 = new Pen(Color.Blue, 5);
+                // g.DrawRectangle(pen2, x,y, image.Width, image.Height);
+
+
+            });
         }
 
-        return bitmap;
+        bitmap.Save(_path);
     }
 
-    private (string Name, string FileName, int ResourceIndex)[] _mappings = new[]
+    private static Size GetSizeFromImageList(IEnumerable<Image> images)
     {
-        ("Empty", "blank", 0),
-        ("A", "down", 1),
-        ("B", "left", 2),
-        ("C", "right", 3),
-        ("D", "up", 4),
-    };
+        var heights = images.Select(x => x.Size.Height).Distinct().ToList();
+        if (heights.Count > 1)
+            throw new Exception($"Images have different heights: {string.Join(", ", heights)}");
+        var height = heights.Single();
+        var widths = images.Select(x => x.Size.Width).Distinct().ToList();
+        if (widths.Count > 1)
+            throw new Exception($"Images have different widths: {string.Join(", ", widths)}");
+        var width = widths.Single();
+        var size = new Size(width, height);
+        return size;
+    }
 
-    public void DrawGrid(Grid grid)
+    private static Dictionary<string, Image> GenerateImageLookup()
     {
+        // Load images into lookup by resource name
         var rootType = typeof(ImageGridRenderer);
         var resourceNames = rootType.Assembly.GetManifestResourceNames();
 
-        var images = new Image[5];
-        for (int i = 0; i < 5; i++)
+        var imageLookup = new Dictionary<string, Image>();
+     
+        for (int i = 0; i < resourceNames.Length; i++)
         {
             var resourceName = resourceNames[i];
             var stream = rootType.Assembly.GetManifestResourceStream(resourceName)!;
-            images[i] = Image.FromStream(stream);
+            var shorterName = resourceName.Split(".")[^2];
+            imageLookup[shorterName.ToLower()] = Image.FromStream(stream);
         }
-        
-        var bitmap = new Bitmap(grid.Width * _size, grid.Height * _size);
-        using (var g = Graphics.FromImage(bitmap))
-        {
-            for (int y = 0; y < grid.Height; y++)
-            {
-                for (int x = 0; x < grid.Width; x++)
-                {
-                    var cellIndex = y * grid.Width + x;
-                    var cell = grid.GetCellBasedOnCoordinates(x,y);
-                    // var mapping = _mappings.SingleOrDefault(m => m.Name == cell.Text);
-                    // // if (mapping is null)
-                    // //     throw new Exception($"No mapping found for {cell.Text}");
-                    // var image = images[mapping.ResourceIndex];
-                    // g.DrawImage(image, x * _size, y * _size);
-                }
-            }
-        }
-        bitmap.Save(_path);
 
-       
+        return imageLookup;
     }
 }

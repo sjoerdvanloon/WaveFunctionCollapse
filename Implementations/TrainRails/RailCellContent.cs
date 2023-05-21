@@ -2,7 +2,7 @@
 
 namespace WaveFunctionCollapse.Implementations.TrainRails;
 
-public class RailCellContent : ICellContent
+public class RailCellContent : ICellContent, IEmbeddedResourceContent
 {
     public  RailTypes[]? RailTypes { get; }
     public bool Picked { get; set; } = false;
@@ -45,13 +45,25 @@ public class RailCellContent : ICellContent
             return "No rail types";
 
         if (RailTypes.Length == 1 && Picked)
-            return $"{RailTypes.Single().ToASCIIArtString()}";
+            return $"{RailTypes.Single().ToAsciiArtString()}";
 
         if (RailTypes.Length == Enum.GetValues<RailTypes>().Length)
-            return "All";
+            return $"All";
         if (RailTypes.Length > 4)
-            return "A lot";
+            return $"A lot";
         
-        return string.Join(",", RailTypes.Select(x=>x.ToASCIIArtString()));
+        return string.Join(",", RailTypes.Select(x=>x.ToAsciiArtString()));
+    }
+
+    public string GetEmbeddedResourceName()
+    {
+        if (RailTypes is null)
+            return "blank";
+        if (!Picked)
+            return "blank";
+        if (Error)
+            return "blank";
+
+        return RailTypes.Single().ToEmbeddedResourceName();
     }
 }

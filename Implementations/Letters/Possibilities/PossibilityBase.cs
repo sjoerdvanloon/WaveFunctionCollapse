@@ -6,7 +6,7 @@ namespace WaveFunctionCollapse.Implementations.Letters.Possibilities;
 public abstract class PossibilityBase
 {
     protected abstract string[] GetExceptedNames();
-    public abstract Implementations.Letters.Letters Letter { get; }
+    public abstract Letters Letter { get; }
 
 
     public bool IsPossible(ICellContext cellContext, Dictionary<Cell, CellContext> cellContexts)

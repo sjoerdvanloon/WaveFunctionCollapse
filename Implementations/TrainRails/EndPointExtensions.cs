@@ -7,7 +7,7 @@ public static class EndPointExtensions
         switch (railType)
         {
             case RailTypes.Empty:
-                return new EndPoints[0];
+                return Array.Empty<EndPoints>();
             case RailTypes.StraightHorizontal:
                 return new EndPoints[]{ EndPoints.East, EndPoints.West };
             case RailTypes.StraightVertical:
@@ -18,10 +18,10 @@ public static class EndPointExtensions
                 return new EndPoints[]{ EndPoints.North, EndPoints.South,  EndPoints.West };
             case RailTypes.StraightVerticalWithRightJunction:
                 return new EndPoints[]{ EndPoints.North, EndPoints.South, EndPoints.East };
-            // case RailTypes.StraightHorizontalWithTopJunction:
-            //     return new EndPoints[]{ EndPoints.North, EndPoints.East, EndPoints.West };
-            // case RailTypes.StraightHorizontalWithBottomJunction:
-            //     return new EndPoints[]{ EndPoints.South, EndPoints.East, EndPoints.West };
+            case RailTypes.StraightHorizontalWithTopJunction:
+                return new EndPoints[]{ EndPoints.North, EndPoints.East, EndPoints.West };
+            case RailTypes.StraightHorizontalWithBottomJunction:
+                return new EndPoints[]{ EndPoints.South, EndPoints.East, EndPoints.West };
             default:
                 throw new ArgumentOutOfRangeException(nameof(railType), railType, null);
         }

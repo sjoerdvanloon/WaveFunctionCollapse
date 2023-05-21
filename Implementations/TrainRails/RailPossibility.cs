@@ -4,9 +4,22 @@ using WaveFunctionCollapse.Possibilities;
 
 namespace WaveFunctionCollapse.Implementations.TrainRails;
 
-public class RailPossibility : IPossibility
+public class RailPossibility : IPossibility, IWeighted
 {
-    public Implementations.TrainRails.RailTypes RailType { get; }
+    public RailTypes RailType { get; }
+    public float Weight => _weights[RailType];
+
+    private readonly Dictionary<RailTypes, float> _weights = new()
+    {
+        {RailTypes.Empty, 8},
+        {RailTypes.StraightHorizontal, 2},
+        {RailTypes.StraightVertical, 2},
+        {RailTypes.Cross, 0.5f},
+        {RailTypes.StraightVerticalWithLeftJunction, 0.5f},
+        {RailTypes.StraightVerticalWithRightJunction, 0.5f},
+        {RailTypes.StraightHorizontalWithTopJunction, 0.5f},
+        {RailTypes.StraightHorizontalWithBottomJunction, 0.5f},
+    };
 
     public RailPossibility(RailTypes railType)
     {
@@ -82,4 +95,5 @@ public class RailPossibility : IPossibility
 
         return true;
     }
+
 }

@@ -23,5 +23,5 @@ public class PossibilityB  : PossibilityBase, IPossibility
         return new []{"A", Name, "C"};
     }
     
-    public override Implementations.Letters.Letters Letter => Implementations.Letters.Letters.B;
+    public override Letters Letter => Letters.B;
 }
