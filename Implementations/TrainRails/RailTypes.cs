@@ -8,60 +8,43 @@ public enum RailTypes
     Cross,
     StraightVerticalWithLeftJunction,
     StraightVerticalWithRightJunction,
-    StraightHorizontalWithTopJunction,
-    StraightHorizontalWithBottomJunction
+    // StraightHorizontalWithTopJunction,
+    // StraightHorizontalWithBottomJunction
     // EndLeft,
     // EndRight,
     // EndTop,
     // EndBottom,
 }
 
-public enum EndPoints
+public class RailTypeDefinition
 {
-    North,East, South, West
+    
 }
 
-public static class EndPointExtensions
+public static class RailTypeExtensions
 {
-    public static EndPoints[] GetEndPoints(this RailTypes railType)
+    public static string ToASCIIArtString(this RailTypes railType)
     {
         switch (railType)
         {
             case RailTypes.Empty:
-                return new EndPoints[0];
+                return "[]";
             case RailTypes.StraightHorizontal:
-                return new EndPoints[]{ EndPoints.East, EndPoints.West };
+                return "--";
             case RailTypes.StraightVertical:
-                return new EndPoints[]{ EndPoints.North, EndPoints.South };
+                return "|";
             case RailTypes.Cross:
-                return new EndPoints[]{ EndPoints.North, EndPoints.South, EndPoints.East, EndPoints.West };
+                return "-|-";
             case RailTypes.StraightVerticalWithLeftJunction:
-                return new EndPoints[]{ EndPoints.North, EndPoints.South,  EndPoints.West };
+                return "-|";
             case RailTypes.StraightVerticalWithRightJunction:
-                return new EndPoints[]{ EndPoints.North, EndPoints.South, EndPoints.East };
-            case RailTypes.StraightHorizontalWithTopJunction:
-                return new EndPoints[]{ EndPoints.North, EndPoints.East, EndPoints.West };
-            case RailTypes.StraightHorizontalWithBottomJunction:
-                return new EndPoints[]{ EndPoints.South, EndPoints.East, EndPoints.West };
+                return "|-";
+            // case RailTypes.StraightHorizontalWithTopJunction:
+            //     return "" 
+            // case RailTypes.StraightHorizontalWithBottomJunction:
+            //     break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(railType), railType, null);
         }
     }
-    public  static EndPoints Opposite(this EndPoints endPoint)
-    {
-        return endPoint switch
-        {
-            EndPoints.North => EndPoints.South,
-            EndPoints.South => EndPoints.North,
-            EndPoints.West => EndPoints.East,
-            EndPoints.East => EndPoints.West,
-            _ => throw new ArgumentOutOfRangeException(nameof(endPoint), endPoint, "Cannot found opposite for this EndPoint")
-        };
-    }
-}
-
-
-public class RailTypeDefinition
-{
-    
 }

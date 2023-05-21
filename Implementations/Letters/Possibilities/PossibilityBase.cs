@@ -11,7 +11,7 @@ public abstract class PossibilityBase
 
     public bool IsPossible(ICellContext cellContext, Dictionary<Cell, CellContext> cellContexts)
     {
-        if (cellContext.HasPickedPossibility())
+        if (cellContext.HasPickedPossibility)
             return false; // This cell already has a picked possibility
 
         var neighbours = cellContext.Cell.Neighbours.GetStraightNeighbours(); // Only look at straight neighbours
@@ -25,9 +25,6 @@ public abstract class PossibilityBase
             var neighbourCell = neighbour.Cell;
             if (!cellContexts.TryGetValue(neighbourCell, out var nbc))
                 throw new Exception($"'{neighbourCell}' is not in the cellContexts dictionary");
-
-            if (nbc.LastPossibilities is null)
-                continue; // This neighbour has no possibilities, so anything is possible
 
             var possibleNames = nbc.LastPossibilities.Select(x => x.Name).ToArray();
             if (!expectedNames.Any(x => possibleNames.Contains(x)))

@@ -1,5 +1,4 @@
-﻿using WaveFunctionCollapse.Implementations.Letters;
-using WaveFunctionCollapse.Implementations.TrainRails;
+﻿using WaveFunctionCollapse.Implementations.TrainRails;
 using WaveFunctionCollapse.Renderers;
 using Xunit.Abstractions;
 
@@ -24,6 +23,9 @@ public class TrainRailsSolverTests : UnitTestBase<ConsoleGridRenderer>
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(10)]
     [InlineData(4000)]
     public void Solve_ShouldWorkForTheNumberOfStepsPassed(int steps)
     {

@@ -10,10 +10,18 @@ namespace WaveFunctionCollapse.Implementations.Letters;
 
 public class LetterSolver : SolverBase
 {
+    private readonly IEnumerable<IPossibility> _possibilities;
+
     public LetterSolver(IEnumerable<IPossibility> possibilities, IPossibilitySelector possibilitySelector,
-        IInitialPossibilityGenerator initialPossibilityGenerator, ICellSelector cellSelector) : base(possibilities,
-        possibilitySelector, initialPossibilityGenerator, cellSelector)
+        IInitialPossibilityGenerator initialPossibilityGenerator, ICellSelector cellSelector) : base(
+        possibilitySelector, cellSelector)
     {
+        _possibilities = possibilities;
+    }
+
+    protected override IPossibility[] GetInitialPossibilities(Cell cell)
+    {
+        return _possibilities.ToArray();
     }
 
     protected override ICellContent GenerateErrorCellContent(Cell cell, CellContext cellContext)
@@ -38,5 +46,10 @@ public class LetterSolver : SolverBase
         var possibilities = cellContext.LastPossibilities.Cast<PossibilityBase>().ToArray();
         var letters = possibilities.Select(x => x.Letter).ToArray();
         return LetterCellContent.CreateUndetermined(letters);
+    }
+
+    protected override Neighbour[] GetApplicableNeighboursToUpdateEntropyFor(Cell cell)
+    {
+        return cell.Neighbours.GetStraightNeighbours();
     }
 }

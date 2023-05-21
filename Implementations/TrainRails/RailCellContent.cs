@@ -45,11 +45,13 @@ public class RailCellContent : ICellContent
             return "No rail types";
 
         if (RailTypes.Length == 1 && Picked)
-            return $"{RailTypes.Single()}";
+            return $"{RailTypes.Single().ToASCIIArtString()}";
 
-        if (RailTypes.Length == 4)
+        if (RailTypes.Length == Enum.GetValues<RailTypes>().Length)
             return "All";
+        if (RailTypes.Length > 4)
+            return "A lot";
         
-        return string.Join(",", RailTypes);
+        return string.Join(",", RailTypes.Select(x=>x.ToASCIIArtString()));
     }
 }
