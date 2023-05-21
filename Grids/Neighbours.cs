@@ -38,6 +38,16 @@ public class Neighbours
         return _neighbours.Where(x=> x.Direction == NeighbourDirection.Bottom || x.Direction == NeighbourDirection.Right || x.Direction == NeighbourDirection.Top || x.Direction == NeighbourDirection.Left).ToArray();
 
     }
+
+    public Neighbour[] GetInTheSameRow()
+    {
+        return null;
+    }
+    
+    public Neighbour[] GetInTheSameColumn()
+    {
+        return null;
+    }
     
 //     public Cell[] GetAllNeighboursInDirection(Cell cell, params NeighbourDirection[] neighbourDirections)
 //     {
